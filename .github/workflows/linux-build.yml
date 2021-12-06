@@ -110,6 +110,7 @@ jobs:
               aarch64)
                 # https://github.com/pytorch/pytorch/blob/master/scripts/build_raspbian.sh
                 CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release -D CAFFE2_CPU_FLAGS="-mfpu=neon -mfloat-abi=hard"' ;;
+              *)
                 ;;
             esac
 
