@@ -144,6 +144,7 @@ jobs:
             export ZIP_FILE_NAME="libtorch-${{ matrix.version }}-${{ matrix.arch }}" 
             cd "/artifacts/${{ matrix.arch }}/libtorch/usr"
             mv local libtorch
+            dpkg -L libgomp1 | grep libgomp.so | xargs -I {}  cp -a {} ./libtorch/lib
             zip --symlinks -r -9 "${ZIP_FILE_NAME}.zip" libtorch
 
             mkdir -p /artifacts/zips
