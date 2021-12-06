@@ -117,16 +117,16 @@ jobs:
             # build libtorch
             rm -rf build
             mkdir -p build && cd build
-            cmake "${CMAKE_OPTIONS}" \
+            cmake -S /pytorch "${CMAKE_OPTIONS}" \
               -D CMAKE_INSTALL_PREFIX="/" \
               -D BUILD_PYTHON=False \
               -D BUILD_TEST=False \
               -D USE_FFMPEG=OFF \
-              -D USE_OPENCV=OFF 
+              -D USE_OPENCV=OFF \
               -D USE_OPENMP=OFF \
               -D USE_CUDA=OFF \
               -D USE_NUMPY=OFF \
-              -D USE_ROCM=OFF ..
+              -D USE_ROCM=OFF
             # lets test softprops/action-gh-release@v1 first
             mkdir -p /artifacts/zips
             echo "libtorch-${{ matrix.version }}-${{ matrix.arch }}" > /artifacts/zips/libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
