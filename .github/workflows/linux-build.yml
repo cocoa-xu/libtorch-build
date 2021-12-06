@@ -102,10 +102,7 @@ jobs:
             git submodule sync
             git submodule update --init --recursive --jobs 0
 
-            # onnx build requires python2
-            # but it takes too long to rebuild the docker image
-            # lets do it here for now
-            apt-get --no-install-recommends install -y python
+            apt-get --no-install-recommends install -y python3 python3-pip python3-dev
 
             # disable XNNPACK for 32-bit builds
             export CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release'
