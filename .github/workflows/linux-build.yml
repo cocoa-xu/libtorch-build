@@ -106,8 +106,10 @@ jobs:
               armv7|armv6)
                 # disable XNNPACK on armhf (even when a RPi 4 running in 32bit mode)
                 # as it uses some arm instructions that are not supported by the RPi CPU
-                CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release -DUSE_XNNPACK=OFF' ;;
-              *)
+                CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release -D USE_XNNPACK=OFF' ;;
+              aarch64)
+                # https://github.com/pytorch/pytorch/blob/master/scripts/build_raspbian.sh
+                CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release -D CAFFE2_CPU_FLAGS="-mfpu=neon -mfloat-abi=hard"' ;;
                 ;;
             esac
 
@@ -133,4 +135,3 @@ jobs:
         with:
           files: |
             ./artifacts/zips/libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
-        
