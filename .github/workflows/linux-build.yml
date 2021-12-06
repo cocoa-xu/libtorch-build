@@ -87,7 +87,8 @@ jobs:
               dataclasses numpy typing_extensions
 
             # clone pytorch
-            git clone --recursive https://github.com/pytorch/pytorch 
+            cd /
+            git clone --recursive https://github.com/pytorch/pytorch /pytorch
 
           run: |
             # ensure /usr/local/bin/cmake can be found
@@ -95,7 +96,7 @@ jobs:
             # set torch version
             export TORCH_VER="v${{ matrix.version }}"
             # git checkout and git submodules
-            cd pytorch && git checkout "${TORCH_VER}"
+            cd /pytorch && git checkout "${TORCH_VER}"
             git submodule sync
             git submodule update --init --recursive --jobs 0
 
