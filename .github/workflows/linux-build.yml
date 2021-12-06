@@ -65,7 +65,7 @@ jobs:
             apt-get --no-install-recommends install -y sudo build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
               python3 python3-pip python3-dev ca-certificates \
-              libgmp-dev libssl-dev libncurses5-dev gnupg2
+              libgmp-dev libssl-dev libncurses5-dev
             # cmake provided by the apt repo has some compatibility issues for 32-bit system
             # technically we can just compile cmake here
             # but it costs too much time
@@ -73,7 +73,7 @@ jobs:
             # therefore, I'll just use my prebuilt cmake to save time
             # (https://github.com/cocoa-xu/cmake-uwu)
             apt-get remove -y cmake cmake-data || true;
-            curl -fSL https://repo.uwucocoa.moe/nerves/cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
+            curl --insecure -fSL https://repo.uwucocoa.moe/nerves/cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
             dpkg -i cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
             # install Python dependencies
             MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests \
