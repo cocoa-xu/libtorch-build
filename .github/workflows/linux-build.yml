@@ -122,7 +122,7 @@ jobs:
             rm -rf build
             mkdir -p build && cd build
             cmake -S /pytorch "${CMAKE_OPTIONS}" \
-              -D CMAKE_INSTALL_PREFIX="/" \
+              -D CMAKE_INSTALL_PREFIX="/usr/local" \
               -D BUILD_PYTHON=False \
               -D BUILD_TEST=False \
               -D USE_FFMPEG=OFF \
