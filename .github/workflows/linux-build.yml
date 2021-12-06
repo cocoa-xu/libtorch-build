@@ -2,13 +2,11 @@ name: LibTorch
 
 on:
   push:
-    branches: [ main ]
     paths-ignore:
       - '**/README.md'
     tags:
       - "v*.*.*"
   pull_request:
-    branches: [ main ]
     paths-ignore:
       - '**/README.md'
     tags:
