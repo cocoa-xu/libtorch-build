@@ -129,9 +129,18 @@ jobs:
               -D USE_CUDA=OFF \
               -D USE_NUMPY=OFF \
               -D USE_ROCM=OFF
-            # lets test softprops/action-gh-release@v1 first
+            make -j"$(nproc)"
+
+            export DESTDIR="/artifacts/${{ matrix.arch }}/libtorch"
+            mkdir -p "${DESTDIR}"
+            make DESTDIR="${DESTDIR}" install
+
+            export ZIP_FILE_NAME="libtorch-${{ matrix.version }}-${{ matrix.arch }}" 
+            cd "/artifacts/${{ matrix.arch }}"
+            zip --symlinks -r -9 "${ZIP_FILE_NAME}.zip" libtorch
+
             mkdir -p /artifacts/zips
-            echo "libtorch-${{ matrix.version }}-${{ matrix.arch }}" > /artifacts/zips/libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
+            mv "${ZIP_FILE_NAME}.zip" "/artifacts/zips/${ZIP_FILE_NAME}.zip"
 
       - name: Release
         uses: softprops/action-gh-release@v1
