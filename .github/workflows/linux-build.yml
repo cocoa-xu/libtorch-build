@@ -101,12 +101,12 @@ jobs:
             git submodule update --init --recursive --jobs 0
 
             # disable XNNPACK for 32-bit builds
-            export EXTRA_CMAKE_DEFS=''
+            export CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release'
             case "${{ matrix.arch }}" in
               armv7|armv6)
                 # disable XNNPACK on armhf (even when a RPi 4 running in 32bit mode)
                 # as it uses some arm instructions that are not supported by the RPi CPU
-                EXTRA_CMAKE_DEFS='-DUSE_XNNPACK=OFF' ;;
+                CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release -DUSE_XNNPACK=OFF' ;;
               *)
                 ;;
             esac
@@ -114,7 +114,7 @@ jobs:
             # build libtorch
             rm -rf build
             mkdir -p build && cd build
-            cmake "${EXTRA_CMAKE_DEFS}" -D CMAKE_BUILD_TYPE=Release \
+            cmake "${CMAKE_OPTIONS}" \
               -D CMAKE_INSTALL_PREFIX="/" \
               -D BUILD_PYTHON=False \
               -D BUILD_TEST=False \
