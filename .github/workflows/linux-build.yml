@@ -1,0 +1,127 @@
+name: LibTorch
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+    branches: [ main ]
+    paths-ignore:
+      - '**/README.md'
+  workflow_dispatch:
+
+jobs:
+  build:
+    # The host should always be linux
+    runs-on: ubuntu-20.04
+    name: Build on ${{ matrix.distro }} ${{ matrix.arch }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - arch: aarch64
+            distro: ubuntu20.04
+            version: "1.9.1"
+            deb_arch: arm64
+          - arch: armv7
+            distro: ubuntu20.04
+            version: "1.9.1"
+            deb_arch: armhf
+          - arch: armv6
+            distro: bullseye
+            version: "1.9.1"
+          - arch: s390x
+            distro: ubuntu20.04
+            version: "1.9.1"
+          - arch: ppc64le
+            distro: ubuntu20.04
+            version: "1.9.1"
+
+    steps:
+      - uses: actions/checkout@v2.1.0
+      - uses: uraimo/run-on-arch-action@v2.0.5
+        name: Build artifact
+        id: build
+        with:
+          arch: ${{ matrix.arch }}
+          distro: ${{ matrix.distro }}
+
+          githubToken: ${{ github.token }}
+
+          setup: |
+            mkdir -p "${PWD}/artifacts"
+
+          dockerRunArgs: |
+            --volume "${PWD}/artifacts:/artifacts"
+
+          env: |
+            artifact_name: libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
+
+          shell: /bin/bash
+
+          install: |
+            apt-get --no-install-recommends install -y sudo build-essential git \
+              automake autoconf pkg-config bc m4 unzip zip curl locales \
+              python3 python3-pip python3-dev ca-certificates \
+              libgmp-dev libssl-dev libncurses5-dev gnupg2
+            # cmake provided by the apt repo has some compatibility issues for 32-bit system
+            # technically we can just compile cmake here
+            # but it costs too much time
+            # besides, we are not including any cmake files in the artifact
+            # therefore, I'll just use my prebuilt cmake to save time
+            # (https://github.com/cocoa-xu/cmake-uwu)
+            apt-get remove -y cmake cmake-data || true;
+            curl -fSL https://repo.uwucocoa.moe/nerves/cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
+            dpkg -i cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
+            # install Python dependencies
+            MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests \
+              dataclasses numpy typing_extensions
+            # clone pytorch
+            git clone --recursive https://github.com/pytorch/pytorch 
+
+          run: |
+            # ensure /usr/local/bin/cmake can be found
+            export PATH="/usr/local/bin:${PATH}"
+            # set torch version
+            export TORCH_VER="v${{ matrix.version }}"
+            # git checkout and git submodules
+            cd pytorch && git checkout "${TORCH_VER}"
+            git submodule sync
+            git submodule update --init --recursive --jobs 0
+
+            # disable XNNPACK for 32-bit builds
+            export EXTRA_CMAKE_DEFS=''
+            case "${{ matrix.arch }}" in
+              armv7|armv6)
+                # disable XNNPACK on armhf (even when a RPi 4 running in 32bit mode)
+                # as it uses some arm instructions that are not supported by the RPi CPU
+                EXTRA_CMAKE_DEFS='-DUSE_XNNPACK=OFF' ;;
+              *)
+                ;;
+            esac
+
+            # build libtorch
+            rm -rf build
+            mkdir -p build && cd build
+            cmake "${EXTRA_CMAKE_DEFS}" -D CMAKE_BUILD_TYPE=Release \
+              -D CMAKE_INSTALL_PREFIX="/" \
+              -D BUILD_PYTHON=False \
+              -D BUILD_TEST=False \
+              -D USE_FFMPEG=OFF \
+              -D USE_OPENCV=OFF 
+              -D USE_OPENMP=OFF \
+              -D USE_CUDA=OFF \
+              -D USE_NUMPY=OFF \
+              -D USE_ROCM=OFF ..
+            # lets test softprops/action-gh-release@v1 first
+            mkdir -p /artifacts/zips
+            echo "libtorch-${{ matrix.version }}-${{ matrix.arch }}" > /artifacts/zips/libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            ./artifacts/zips/libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
+        
