@@ -41,7 +41,7 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.1.0
-      - uses: uraimo/run-on-arch-action@v2.0.5
+      - uses: uraimo/run-on-arch-action@v2.1.1
         name: Build artifact
         id: build
         with:
@@ -62,6 +62,7 @@ jobs:
           shell: /bin/bash
 
           install: |
+            apt-get update -q -y
             apt-get --no-install-recommends install -y sudo build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
               python3 python3-pip python3-dev ca-certificates \
