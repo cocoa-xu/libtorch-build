@@ -23,20 +23,23 @@ jobs:
         include:
           - arch: aarch64
             distro: ubuntu20.04
+            cmake_version: "3.22.0"
             version: "1.9.1"
-            deb_arch: arm64
           - arch: armv7
             distro: ubuntu20.04
+            cmake_version: "3.22.0"
             version: "1.9.1"
-            deb_arch: armhf
           - arch: armv6
             distro: bullseye
+            cmake_version: "3.22.0"
             version: "1.9.1"
           - arch: s390x
             distro: ubuntu20.04
+            cmake_version: "3.22.0"
             version: "1.9.1"
           - arch: ppc64le
             distro: ubuntu20.04
+            cmake_version: "3.22.0"
             version: "1.9.1"
 
     steps:
