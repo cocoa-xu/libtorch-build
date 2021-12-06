@@ -66,22 +66,26 @@ jobs:
 
           install: |
             apt-get update -q -y
-            apt-get --no-install-recommends install -y sudo build-essential git \
-              automake autoconf pkg-config bc m4 unzip zip curl locales \
-              python3 python3-pip python3-dev ca-certificates \
-              libgmp-dev libssl-dev libncurses5-dev
             # cmake provided by the apt repo has some compatibility issues for 32-bit system
             # technically we can just compile cmake here
             # but it costs too much time
             # besides, we are not including any cmake files in the artifact
             # therefore, I'll just use my prebuilt cmake to save time
             # (https://github.com/cocoa-xu/cmake-uwu)
+            apt-get --no-install-recommends install -y curl
+            curl --insecure -fSL "https://repo.uwucocoa.moe/nerves/cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb" -o "cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb"
+
+            apt-get --no-install-recommends install -y curl build-essential git \
+              automake autoconf pkg-config bc m4 unzip zip curl locales \
+              python3 python3-pip python3-dev ca-certificates \
+              libgmp-dev libssl-dev libncurses5-dev
             apt-get remove -y cmake cmake-data || true;
-            curl --insecure -fSL https://repo.uwucocoa.moe/nerves/cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
             dpkg -i cmake_${{ matrix.cmake_version }}_${{ matrix.arch }}.deb
+
             # install Python dependencies
             MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests \
               dataclasses numpy typing_extensions
+
             # clone pytorch
             git clone --recursive https://github.com/pytorch/pytorch 
 
