@@ -27,8 +27,8 @@ cd "pytorch-v${TORCH_VER}"
 
 # disable XNNPACK for 32-bit builds
 export CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release'
-case "${{ matrix.arch }}" in
-    armv7|armv6)
+case "${ARCH}" in
+    armv7*)
         # disable XNNPACK on armhf (even when a RPi 4 running in 32bit mode)
         # as it uses some arm instructions that are not supported by the RPi CPU
         CMAKE_OPTIONS='-D USE_XNNPACK=OFF' ;;
