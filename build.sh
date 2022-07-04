@@ -9,7 +9,7 @@ $sudo apt-get update -q -y
 $sudo apt-get --no-install-recommends install -y curl ca-certificates gnupg2 curl sudo
 curl --insecure -fSL "https://repo.uwucocoa.moe/pgp.key" | apt-key add -
 echo "deb [arch=${ARCH_NAME}] https://repo.uwucocoa.moe/ stable main" | tee /etc/apt/sources.list.d/uwucocoa.list
-alias sudo=`which sudo`
+alias sudo="$(which sudo)"
 $sudo apt-get update -q -y
 $sudo apt-get install -y wget gcc g++ make cmake-uwu build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
