@@ -52,7 +52,7 @@ jobs:
           run: |
             # ensure /usr/local/bin/cmake can be found
             export PATH="/usr/local/bin:${PATH}"
-            export TORCH_VER="v${{ matrix.version }}"
+            export TORCH_VER="${{ matrix.version }}"
             export ARCH="${{ matrix.arch }}"
             export ARCH_NAME="${{ matrix.arch_name }}"
 
