@@ -1,1 +1,2 @@
-# elixir-nx-libtorch
+# libtorch-build
+Compile libtorch for self use.
