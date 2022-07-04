@@ -1,5 +1,8 @@
 #!/bin/bash
 
+set -e
+export DEBIAN_FRONTEND=noninteractive
+
 export GIT_ROOT="$(pwd)"
 mkdir -p "${GIT_ROOT}/artifacts"
 
