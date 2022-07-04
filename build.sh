@@ -54,7 +54,8 @@ cmake -D CMAKE_BUILD_TYPE=Release "${CMAKE_OPTIONS}" \
     -D CMAKE_PREFIX_PATH="$(python3 -c 'import site as s; print(s.getusersitepackages())')" \
     -D NUMPY_INCLUDE_DIR="$(python3 -c 'import numpy as n; print(n.get_include())')" \
     -D PYTHON_EXECUTABLE="$(which python3)" \
-    -D PYTHON_INCLUDE_DIR="$(python3 -c 'import distutils.sysconfig as s; print(s.get_python_inc())')"
+    -D PYTHON_INCLUDE_DIR="$(python3 -c 'import distutils.sysconfig as s; print(s.get_python_inc())')" \
+    ..
 make -j"$(nproc)"
 
 export DESTDIR="/artifacts/${ARCH_NAME}/libtorch"
