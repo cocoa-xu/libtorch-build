@@ -21,7 +21,14 @@ MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests
               dataclasses numpy typing_extensions
 
 # download pytorch source
-wget "https://github.com/pytorch/pytorch/releases/download/v${TORCH_VER}/pytorch-v${TORCH_VER}.tar.gz" -O "pytorch-v${TORCH_VER}.tar.gz"
+case "${ARCH_NAME}" in
+    armhf)
+        wget --no-check-certificate "https://github.com/pytorch/pytorch/releases/download/v${TORCH_VER}/pytorch-v${TORCH_VER}.tar.gz" -O "pytorch-v${TORCH_VER}.tar.gz"
+    ;;
+    *)
+        wget "https://github.com/pytorch/pytorch/releases/download/v${TORCH_VER}/pytorch-v${TORCH_VER}.tar.gz" -O "pytorch-v${TORCH_VER}.tar.gz"
+    ;;
+esac
 tar xf "pytorch-v${TORCH_VER}.tar.gz"
 cd "pytorch-v${TORCH_VER}"
 

@@ -28,47 +28,47 @@ build arm32v7:
     paths:
       - ./artifacts/libtorch-*
 
-build ppc64el:
-  stage: build
-  image: ppc64le/ubuntu:20.04
-  variables:
-    SHORT_NAME: libtorch
-    ARCH: ppc64el
-    ARCH_NAME: ppc64el
-    TORCH_VER: "1.10.2"
-  script:
-    - bash ./build.sh
-    - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
-  artifacts:
-    paths:
-      - ./artifacts/libtorch-*
+# build ppc64el:
+#   stage: build
+#   image: ppc64le/ubuntu:20.04
+#   variables:
+#     SHORT_NAME: libtorch
+#     ARCH: ppc64el
+#     ARCH_NAME: ppc64el
+#     TORCH_VER: "1.10.2"
+#   script:
+#     - bash ./build.sh
+#     - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
+#   artifacts:
+#     paths:
+#       - ./artifacts/libtorch-*
 
-build s390x:
-  stage: build
-  image: s390x/ubuntu:20.04
-  variables:
-    SHORT_NAME: libtorch
-    ARCH: s390x
-    ARCH_NAME: s390x
-    TORCH_VER: "1.10.2"
-  script:
-    - bash ./build.sh
-    - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
-  artifacts:
-    paths:
-      - ./artifacts/libtorch-*
+# build s390x:
+#   stage: build
+#   image: s390x/ubuntu:20.04
+#   variables:
+#     SHORT_NAME: libtorch
+#     ARCH: s390x
+#     ARCH_NAME: s390x
+#     TORCH_VER: "1.10.2"
+#   script:
+#     - bash ./build.sh
+#     - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
+#   artifacts:
+#     paths:
+#       - ./artifacts/libtorch-*
 
-build riscv64:
-  stage: build
-  image: riscv64/ubuntu:20.04
-  variables:
-    SHORT_NAME: libtorch
-    ARCH: riscv64
-    ARCH_NAME: riscv64
-    TORCH_VER: "1.10.2"
-  script:
-    - bash ./build.sh
-    - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
-  artifacts:
-    paths:
-      - ./artifacts/libtorch-*
+# build riscv64:
+#   stage: build
+#   image: riscv64/ubuntu:20.04
+#   variables:
+#     SHORT_NAME: libtorch
+#     ARCH: riscv64
+#     ARCH_NAME: riscv64
+#     TORCH_VER: "1.10.2"
+#   script:
+#     - bash ./build.sh
+#     - mv /artifacts/${arch}/debs/${SHORT_NAME}_${version}_${deb_arch}.deb ./${SHORT_NAME}_${version}_${deb_arch}.deb
+#   artifacts:
+#     paths:
+#       - ./artifacts/libtorch-*

@@ -31,14 +31,6 @@ jobs:
             arch_name: armhf
             distro: ubuntu20.04
             version: "1.10.2"
-          - arch: s390x
-            arch_name: s390x
-            distro: ubuntu20.04
-            version: "1.10.2"
-          - arch: ppc64le
-            arch_name: ppc64el
-            distro: ubuntu20.04
-            version: "1.10.2"
 
     steps:
       - uses: actions/checkout@v3
@@ -49,16 +41,11 @@ jobs:
           arch: ${{ matrix.arch }}
           distro: ${{ matrix.distro }}
 
-          githubToken: ${{ github.token }}
-
           setup: |
             mkdir -p "${PWD}/artifacts"
 
           dockerRunArgs: |
             --volume "${PWD}/artifacts:/artifacts"
-
-          env: |
-            artifact_name: libtorch-${{ matrix.version }}-${{ matrix.arch }}.zip
 
           shell: /bin/bash
 
