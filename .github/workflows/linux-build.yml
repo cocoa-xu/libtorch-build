@@ -64,16 +64,10 @@ jobs:
 
           install: |
             apt-get update -q -y
-            # cmake provided by the apt repo has some compatibility issues for 32-bit system
-            # technically we can just compile cmake here
-            # but it costs too much time
-            # besides, we are not including any cmake files in the artifact
-            # therefore, I'll just use my prebuilt cmake to save time
-            # (https://github.com/cocoa-xu/cmake-uwu)
             apt-get --no-install-recommends install -y curl ca-certificates gnupg2 curl
             curl --insecure -fSL "https://repo.uwucocoa.moe/pgp.key" | apt-key add -
             echo "deb [arch=${{ matrix.pair.arch_name }}] https://repo.uwucocoa.moe/ stable main" | tee /etc/apt/sources.list.d/uwucocoa.list
-            
+
             apt-get update
             apt-get --no-install-recommends install -y build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
