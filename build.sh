@@ -58,12 +58,12 @@ cmake -D CMAKE_BUILD_TYPE=Release "${CMAKE_OPTIONS}" \
     ..
 make -j"$(nproc)"
 
-export DESTDIR="/artifacts/${ARCH_NAME}/libtorch"
+export DESTDIR="${GIT_ROOT}/libtorch-install/${ARCH_NAME}/libtorch"
 mkdir -p "${DESTDIR}"
 make DESTDIR="${DESTDIR}" install
 
 export ARCHIVE_FILE_NAME="libtorch-${TORCH_VER}-${ARCH}" 
-cd "/artifacts/${ARCH_NAME}/libtorch/usr"
+cd "${GIT_ROOT}/libtorch-install/${ARCH_NAME}/libtorch/usr"
 mv local libtorch
 dpkg -L libgomp1 | grep libgomp.so | xargs -I {}  cp -a {} "./libtorch/lib"
 tar -czf "${ARCHIVE_FILE_NAME}.tar.gz" libtorch
