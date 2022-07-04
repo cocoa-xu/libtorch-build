@@ -4,14 +4,14 @@ export GIT_ROOT="$(pwd)"
 mkdir -p "${GIT_ROOT}/artifacts"
 
 # dependencies
-alias sudo=`which sudo`
-sudo apt-get update -q -y
-sudo apt-get --no-install-recommends install -y curl ca-certificates gnupg2 curl sudo
+alias sudo="$(which sudo)"
+$sudo apt-get update -q -y
+$sudo apt-get --no-install-recommends install -y curl ca-certificates gnupg2 curl sudo
 curl --insecure -fSL "https://repo.uwucocoa.moe/pgp.key" | apt-key add -
 echo "deb [arch=${ARCH_NAME}] https://repo.uwucocoa.moe/ stable main" | tee /etc/apt/sources.list.d/uwucocoa.list
 alias sudo=`which sudo`
-sudo apt-get update -q -y
-sudo apt-get install -y wget gcc g++ make cmake-uwu build-essential git \
+$sudo apt-get update -q -y
+$sudo apt-get install -y wget gcc g++ make cmake-uwu build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
               python3 python3-pip python3-dev libgmp-dev
 MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests \
@@ -38,7 +38,7 @@ esac
 
 rm -rf build
 mkdir -p build && cd build
-cmake -S /pytorch -D CMAKE_BUILD_TYPE=Release "${CMAKE_OPTIONS}" \
+cmake -D CMAKE_BUILD_TYPE=Release "${CMAKE_OPTIONS}" \
     -D CMAKE_INSTALL_PREFIX="/usr/local" \
     -D BUILD_PYTHON=False \
     -D BUILD_TEST=False \
