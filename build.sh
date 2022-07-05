@@ -16,7 +16,7 @@ alias sudo="$(which sudo)"
 $sudo apt-get update -q -y
 $sudo apt-get install -y wget gcc g++ make cmake-uwu build-essential git \
               automake autoconf pkg-config bc m4 unzip zip curl locales \
-              python3 python3-pip python3-dev libgmp-dev
+              python3 python3-pip python3-dev libgmp-dev libopenblas-openmp-dev
 MAKEFLAGS="-j$(nproc)" pip3 install --user pyyaml setuptools future six requests \
               dataclasses numpy typing_extensions
 
@@ -34,12 +34,12 @@ cd "pytorch-v${TORCH_VER}"
 
 # disable XNNPACK for 32-bit builds
 export CMAKE_OPTIONS='-D CMAKE_BUILD_TYPE=Release'
-case "${ARCH}" in
-    armv7*)
+case "${ARCH_NAME}" in
+    armhf)
         # disable XNNPACK on armhf (even when a RPi 4 running in 32bit mode)
         # as it uses some arm instructions that are not supported by the RPi CPU
         CMAKE_OPTIONS='-D USE_XNNPACK=OFF' ;;
-    aarch64)
+    arm64)
         # https://github.com/pytorch/pytorch/blob/master/scripts/build_raspbian.sh
         CMAKE_OPTIONS='-DCAFFE2_CPU_FLAGS="-mfpu=neon -mfloat-abi=hard"' ;;
     *)
@@ -55,6 +55,7 @@ cmake -D CMAKE_BUILD_TYPE=Release "${CMAKE_OPTIONS}" \
     -D USE_FFMPEG=OFF \
     -D USE_OPENCV=OFF \
     -D USE_OPENMP=ON \
+    -D USE_BLAS=ON \
     -D USE_CUDA=OFF \
     -D USE_NUMPY=ON \
     -D USE_ROCM=OFF \
@@ -69,10 +70,12 @@ export DESTDIR="${GIT_ROOT}/libtorch-install/${ARCH_NAME}/libtorch"
 mkdir -p "${DESTDIR}"
 make DESTDIR="${DESTDIR}" install
 
-export ARCHIVE_FILE_NAME="libtorch-${TORCH_VER}-${ARCH}" 
+export ARCHIVE_FILE_NAME="libtorch-${TORCH_VER}-${ARCH}"
 cd "${GIT_ROOT}/libtorch-install/${ARCH_NAME}/libtorch/usr"
 mv local libtorch
 dpkg -L libgomp1 | grep libgomp.so | xargs -I {}  cp -a {} "./libtorch/lib"
+dpkg -L libopenblas-openmp-dev | grep -E '*.so' | xargs -I {}  cp -a {} "./libtorch/lib"
+dpkg -L libopenblas0-openmp | grep -E '*.so' | xargs -I {}  cp -a {} "./libtorch/lib"
 tar -czf "${ARCHIVE_FILE_NAME}.tar.gz" libtorch
 zip --symlinks -r -9 "${ARCHIVE_FILE_NAME}.zip" libtorch
 
