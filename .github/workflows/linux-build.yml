@@ -56,7 +56,7 @@ jobs:
             export ARCH="${{ matrix.arch }}"
             export ARCH_NAME="${{ matrix.arch_name }}"
 
-            bash ./build.sh && mv ./artifacts/libtorch-* /artifacts
+            bash ./build.sh ${TORCH_VER} ${ARCH} ${ARCH_NAME} && mv ./artifacts/libtorch-* /artifacts
 
       - name: Release
         uses: softprops/action-gh-release@v1
@@ -64,4 +64,3 @@ jobs:
         with:
           files: |
             ./artifacts/libtorch-*.tar.gz
-            ./artifacts/libtorch-*.zip
