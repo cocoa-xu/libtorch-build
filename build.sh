@@ -3,6 +3,30 @@
 set -e
 export DEBIAN_FRONTEND=noninteractive
 
+if [ -z "${1}"]; then
+    echo "Please specify the torch version"
+    exit 1
+else
+    export TORCH_VER="${1}"
+fi
+echo "Torch version: ${TORCH_VER}"
+
+if [ -z "${2}"]; then
+    echo "Please specify the CPU arch"
+    exit 1
+else
+    export ARCH="${2}"
+fi
+echo "arch: ${ARCH}${ARCH_NAME}"
+
+if [ -z "${3}"]; then
+    echo "Please specify the CPU arch name for the deb package"
+    exit 1
+else
+    export ARCH_NAME="${3}"
+fi
+echo "arch_name: ${ARCH_NAME}"
+
 export GIT_ROOT="$(pwd)"
 mkdir -p "${GIT_ROOT}/artifacts"
 
@@ -77,7 +101,6 @@ dpkg -L libgomp1 | grep libgomp.so | xargs -I {}  cp -a {} "./libtorch/lib"
 dpkg -L libopenblas-openmp-dev | grep -E '*.so' | xargs -I {}  cp -a {} "./libtorch/lib"
 dpkg -L libopenblas0-openmp | grep -E '*.so' | xargs -I {}  cp -a {} "./libtorch/lib"
 tar -czf "${ARCHIVE_FILE_NAME}.tar.gz" libtorch
-zip --symlinks -r -9 "${ARCHIVE_FILE_NAME}.zip" libtorch
 
 mv "${ARCHIVE_FILE_NAME}.tar.gz" "${GIT_ROOT}/artifacts/${ARCHIVE_FILE_NAME}.tar.gz"
-mv "${ARCHIVE_FILE_NAME}.zip" "${GIT_ROOT}/artifacts/${ARCHIVE_FILE_NAME}.zip"
+echo "Build finished successfully: ${GIT_ROOT}/artifacts/${ARCHIVE_FILE_NAME}.tar.gz"

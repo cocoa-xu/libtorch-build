@@ -2,12 +2,11 @@ build arm64:
   stage: build
   image: arm64v8/ubuntu:20.04
   variables:
-    SHORT_NAME: libtorch
     ARCH: aarch64
     ARCH_NAME: arm64
     TORCH_VER: "1.10.2"
   script:
-    - bash ./build.sh
+    - bash ./build.sh ${TORCH_VER} ${ARCH} ${ARCH_NAME}
   artifacts:
     paths:
       - ./artifacts/libtorch-*
@@ -16,12 +15,11 @@ build arm32v7:
   stage: build
   image: arm32v7/ubuntu:20.04
   variables:
-    SHORT_NAME: libtorch
     ARCH: armhf
     ARCH_NAME: armhf
     TORCH_VER: "1.10.2"
   script:
-    - bash ./build.sh
+    - bash ./build.sh ${TORCH_VER} ${ARCH} ${ARCH_NAME}
   artifacts:
     paths:
       - ./artifacts/libtorch-*
